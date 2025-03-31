@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Telebirr Payment Integration APIs</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+		<script>
+			hljs.highlightAll();
+		</script>
+		<style>
+			body {
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				line-height: 1.7;
+				margin: 20px;
+				background-color: #1e1e1e; /* Dark background */
+				color: #d4d4d4; /* Light text */
+			}
+			h1,
+			h2,
+			h3 {
+				color: #569cd6; /* Blue headers */
+				border-bottom: 2px solid #569cd6;
+				padding-bottom: 8px;
+				margin-top: 25px;
+			}
+			h2 {
+				margin-top: 30px;
+			}
+			h3 {
+				margin-top: 20px;
+				color: #c586c0; /* Purple sub-headers */
+			}
+			p {
+				margin-bottom: 15px;
+				color: #d4d4d4;
+			}
+			pre {
+				background-color: #282c34; /* Darker code background */
+				padding: 15px;
+				border-radius: 8px;
+				overflow-x: auto;
+				position: relative; /* For copy button */
+			}
+			code {
+				font-family: "Fira Mono", monospace;
+				color: #dcdcaa; /* Yellowish code text */
+			}
+			.request-info {
+				background-color: #254659; /* Dark blue request */
+				padding: 15px;
+				border-left: 5px solid #03a9f4;
+				margin-bottom: 20px;
+				border-radius: 5px;
+			}
+			.response-success {
+				background-color: #2e4334; /* Dark green success */
+				padding: 15px;
+				border-left: 5px solid #4caf50;
+				margin-bottom: 20px;
+				border-radius: 5px;
+			}
+			.response-error {
+				background-color: #432b30; /* Dark red error */
+				padding: 15px;
+				border-left: 5px solid #f44336;
+				margin-bottom: 20px;
+				border-radius: 5px;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 20px;
+				background-color: #282c34; /* Dark table background */
+				color: #d4d4d4;
+				border-radius: 5px;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+			}
+			th,
+			td {
+				border: 1px solid #3e4451; /* Darker border */
+				padding: 12px;
+				text-align: left;
+			}
+			th {
+				background-color: #3e4451; /* Darker header background */
+				color: #eee;
+				font-weight: bold;
+			}
+			.path-param {
+				font-weight: bold;
+				color: #f48fb1; /* Pink path param */
+			}
+			.header-param {
+				font-weight: bold;
+				color: #81d4fa; /* Light blue header param */
+			}
+			.field-name {
+				font-weight: bold;
+				color: #dcdcaa;
+			}
+			.copy-button {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				background-color: #673ab7; /* Purple copy button */
+				color: #fff;
+				border: none;
+				padding: 8px 12px;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 0.9em;
+				opacity: 0.8;
+				transition: opacity 0.3s ease;
+			}
+			.copy-button:hover {
+				opacity: 1;
+			}
+			.success-message {
+				background-color: #4caf50;
+				color: white;
+				padding: 10px;
+				border-radius: 4px;
+				margin-top: 10px;
+				text-align: center;
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Telebirr Payment Integration APIs</h1>
+
+		<h2>Option 1: Biller App Payment Integration APIs</h2>
+
+		<h3>1. Get Billing Details API</h3>
+		<p>
+			<strong>Purpose:</strong> Retrieve bill amount and related details for a
+			given <span class="field-name">referenceNumber</span>.
+		</p>
+		<p><strong>HTTP Method:</strong> <code>GET</code></p>
+		<p>
+			<strong>Endpoint:</strong>
+			<code
+				>/api/v1/billing/details/<span class="path-param"
+					>{referenceNumber}</span
+				></code
+			>
+		</p>
+
+		<h4>Path Parameter:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Parameter</th>
+					<th>Type</th>
+					<th>Required</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="path-param">referenceNumber</span></td>
+					<td>string</td>
+					<td>Mandatory</td>
+					<td>
+						Unique identifier for the user's service (e.g., account number,
+						subscription ID).
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Request Headers:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="header-param">Content-Type</span></td>
+					<td><code>application/json</code></td>
+				</tr>
+				<tr>
+					<td><span class="header-param">Authorization</span></td>
+					<td><code>Bearer &lt;API_KEY_OR_TOKEN&gt;</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Success Response (200 OK):</h4>
+		<pre><code class="language-json">{
+  "referenceNumber": "1234567890",
+  "currentPackageName": "Monthly_Internet",
+  "amountDue": 500.00,
+  "currency": "ETB",
+  "billingPeriodStart": "2025-03-01",
+  "billingPeriodEnd": "2025-03-31",
+  "customerName": "John Doe",
+  "phone": "251913228892",
+  "description": "Monthly Internet subscription for March 2025"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h3>2. Update Payment Status API</h3>
+		<p>
+			<strong>Purpose:</strong> Notify 24Online about a successful Telebirr
+			payment.
+		</p>
+		<p><strong>HTTP Method:</strong> <code>POST</code></p>
+		<p>
+			<strong>Endpoint:</strong>
+			<code>/api/v1/payments/telebirr/confirmation</code>
+		</p>
+
+		<h4>Request Headers:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="header-param">Content-Type</span></td>
+					<td><code>application/json</code></td>
+				</tr>
+				<tr>
+					<td><span class="header-param">Authorization</span></td>
+					<td><code>Bearer &lt;API_KEY_OR_TOKEN&gt;</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Request Body:</h4>
+		<pre><code class="language-json">{
+  "referenceNumber": "1234567890",
+  "transactionId": "TB2025032712345",
+  "paymentDate": "2025-03-27T09:00:00Z",
+  "amountPaid": 500.00,
+  "currency": "ETB",
+  "paymentMethod": "TelebirrBillerPayment",
+  "additionalInfo": {
+    "telebirrPayerNumber": "2519xxxxxxxx"
+  }
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h4>Success Response (HTTP 200 OK):</h4>
+		<pre><code class="language-json">{
+  "status": "success",
+  "message": "Payment processed successfully"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h4>Error Responses:</h4>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 400 Bad Request:</strong> If the request body is invalid or
+				missing required fields.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Invalid payment confirmation data"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 401 Unauthorized:</strong> If the request is not
+				authenticated.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Unauthorized"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 409 Conflict:</strong> If the payment notification is
+				duplicated or causes a system conflict.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Payment already processed or conflict occurred"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 500 Internal Server Error:</strong> For any unexpected
+				server issues.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Internal server error"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<h2>Option 2: MiniApp Integration APIs</h2>
+		<p>
+			The purpose of this integration is to enable seamless Telebirr MiniApp
+			functionality, allowing users to change their current service package
+			without manually contacting 24Online. Users can select a new package and
+			complete the payment directly within the MiniApp.
+		</p>
+		<p>
+			<strong>Note:</strong> Telebirr MiniApp is the other Telebirr payment
+			option that allows users to make payments within the Telebirr SuperApp.
+		</p>
+
+		<h3>1. Get Available Packages API</h3>
+		<p>
+			<strong>Purpose:</strong> To retrieve a list of available service
+			packages.
+		</p>
+		<p><strong>HTTP Method:</strong> <code>GET</code></p>
+		<p><strong>Endpoint:</strong> <code>/api/v1/packages</code></p>
+
+		<h4>Request Headers:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="header-param">Content-Type</span></td>
+					<td><code>application/json</code></td>
+				</tr>
+				<tr>
+					<td><span class="header-param">Authorization</span></td>
+					<td><code>Bearer &lt;API_KEY_OR_TOKEN&gt;</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Success Response (200 OK):</h4>
+		<pre><code class="language-json">[
+  {
+    "packageId": "monthly_basic",
+    "name": "Basic Monthly",
+    "description": "Basic internet package for one month",
+    "price": 300.00,
+    "currency": "ETB",
+    "durationDays": 30
+  },
+  {
+    "packageId": "yearly_premium",
+    "name": "Premium Yearly",
+    "description": "Premium internet package for one year with extra benefits",
+    "price": 3000.00,
+    "currency": "ETB",
+    "durationDays": 365
+  }
+]</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h3>2. Get User Account Details API</h3>
+		<p>
+			<strong>Purpose:</strong> Retrieve the user's account details, including
+			the current package amount and current package. If the package has not
+			expired based on the passed date, the amount will be 0; otherwise, it will
+			return the package amount.
+		</p>
+		<p><strong>HTTP Method:</strong> <code>GET</code></p>
+		<p>
+			<strong>Endpoint:</strong>
+			<code
+				>/api/v1/accounts/<span class="path-param">{referenceNumber}</span
+				>/<span class="path-param">{date}</span></code
+			>
+		</p>
+
+		<h4>Path Parameters:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Parameter</th>
+					<th>Type</th>
+					<th>Required</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="path-param">referenceNumber</span></td>
+					<td>string</td>
+					<td>Mandatory</td>
+					<td>Unique identifier for the user’s account.</td>
+				</tr>
+				<tr>
+					<td><span class="path-param">date</span></td>
+					<td>string</td>
+					<td>Mandatory</td>
+					<td>
+						The date used to determine the status of the package (either Monthly
+						or Yearly) based on the specified parameter date.
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Request Headers:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="header-param">Content-Type</span></td>
+					<td><code>application/json</code></td>
+				</tr>
+				<tr>
+					<td><span class="header-param">Authorization</span></td>
+					<td><code>Bearer &lt;API_KEY_OR_TOKEN&gt;</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Success Response (200 OK):</h4>
+		<pre><code class="language-json">{
+  "referenceNumber": "1234567890",
+  "currentPackage": {
+    "packageId": "monthly_basic",
+    "name": "Basic Monthly",
+    "lastPaymentDate": "2025-02-28",
+    "expiryDate": "2025-03-31",
+    "amount": 150.00,
+    "currency": "ETB"
+  }
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h3>3. Change User Package API</h3>
+		<p>
+			<strong>Purpose:</strong> Allow the user to change their current service
+			package.
+		</p>
+		<p><strong>HTTP Method:</strong> <code>POST</code></p>
+		<p>
+			<strong>Endpoint:</strong>
+			<code
+				>/api/v1/accounts/<span class="path-param">{referenceNumber}</span
+				>/package</code
+			>
+		</p>
+
+		<h4>Path Parameter:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Parameter</th>
+					<th>Type</th>
+					<th>Required</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="path-param">referenceNumber</span></td>
+					<td>string</td>
+					<td>Mandatory</td>
+					<td>Unique identifier for the user’s account.</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Request Headers:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="header-param">Content-Type</span></td>
+					<td><code>application/json</code></td>
+				</tr>
+				<tr>
+					<td><span class="header-param">Authorization</span></td>
+					<td><code>Bearer &lt;API_KEY_OR_TOKEN&gt;</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Request Body:</h4>
+		<pre><code class="language-json">{
+  "packageId": "yearly_premium"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h3>4. Process Payment for Package API</h3>
+		<p>
+			<strong>Purpose:</strong> Notify 24Online about a successful payment made
+			through Telebirr miniapp.
+		</p>
+		<p><strong>HTTP Method:</strong> <code>POST</code></p>
+		<p>
+			<strong>Endpoint:</strong> <code>/api/v1/payments/telebirr/package</code>
+		</p>
+
+		<h4>Request Headers:</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Header</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><span class="header-param">Content-Type</span></td>
+					<td><code>application/json</code></td>
+				</tr>
+
+				<tr>
+					<td><span class="header-param">Authorization</span></td>
+					<td><code>Bearer &lt;API_KEY_OR_TOKEN&gt;</code></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h4>Request Body:</h4>
+		<pre><code class="language-json">{
+  "referenceNumber": "1234567890",
+  "packageId": "yearly_premium",
+  "transactionId": "TB2025032754321",
+  "paymentDate": "2025-03-27T09:30:00Z",
+  "amountPaid": 3000.00,
+  "currency": "ETB",
+  "paymentMethod": "TelebirrMiniappPayment",
+  "additionalInfo": {
+    "telebirrPayerNumber": "2519xxxxxxxx"
+  }
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h4>Success Response (HTTP 200 OK):</h4>
+		<pre><code class="language-json">{
+  "status": "success",
+  "message": "Payment processed successfully"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+
+		<h4>Error Responses:</h4>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 400 Bad Request:</strong> If the request body is invalid or
+				missing required fields.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Invalid payment confirmation data"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 401 Unauthorized:</strong> If the request is not
+				authenticated.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Unauthorized"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 409 Conflict:</strong> If the payment notification is
+				duplicated or causes a system conflict.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Payment already processed or conflict occurred"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div class="response-error">
+			<p>
+				<strong>HTTP 500 Internal Server Error:</strong> For any unexpected
+				server issues.
+			</p>
+			<pre><code class="language-json">{
+  "error": "Internal server error"
+}</code><button class="copy-button" onclick="copyCode(this)">Copy</button></pre>
+		</div>
+
+		<div id="copy-success-message" class="success-message">
+			Code copied to clipboard!
+		</div>
+
+		<script>
+			function copyCode(button) {
+			    const pre = button.parentNode;
+			    const codeElement = pre.querySelector('code');
+			    const textToCopy = codeElement.textContent;
+
+			    navigator.clipboard.writeText(textToCopy)
+			        .then(() => {
+			            const successMessage = document.getElementById('copy-success-message');
+			            successMessage.style.display = 'block';
+			            setTimeout(() => {
+			                successMessage.style.display = 'none';
+			            }, 2000); // Hide after 2 seconds
+			        })
+			        .catch(err) {
+			            console.error('Could not copy text: ', err);
+			            alert('Failed to copy code. Please copy manually.');
+			        });
+			}
+		</script>
+	</body>
+</html>
